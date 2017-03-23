@@ -5,9 +5,7 @@ import android.support.animation.SpringAnimation
 import android.support.animation.SpringForce
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
-import com.alexkrupa.springanimationexamples.createSpringAnimation
-import com.alexkrupa.springanimationexamples.updateImmersiveMode
-import com.alexkrupa.springanimationexamples.R
+import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.activity_position.*
 
 class PositionActivity : AppCompatActivity() {
@@ -24,12 +22,15 @@ class PositionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_position)
 
         // create X and Y animations for view's initial position once it's known
-        movingView.viewTreeObserver.addOnGlobalLayoutListener {
-            xAnimation = createSpringAnimation(
-                    movingView, SpringAnimation.X, movingView.x, STIFFNESS, DAMPING_RATIO)
-            yAnimation = createSpringAnimation(
-                    movingView, SpringAnimation.Y, movingView.y, STIFFNESS, DAMPING_RATIO)
-        }
+        movingView.viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                xAnimation = createSpringAnimation(
+                        movingView, SpringAnimation.X, movingView.x, STIFFNESS, DAMPING_RATIO)
+                yAnimation = createSpringAnimation(
+                        movingView, SpringAnimation.Y, movingView.y, STIFFNESS, DAMPING_RATIO)
+                movingView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
 
         var dX = 0f
         var dY = 0f
