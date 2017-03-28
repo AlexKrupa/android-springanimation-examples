@@ -15,6 +15,10 @@ allprojects {
     }
 }
 
+ext {
+    supportLibVersion = '25.3.1'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
